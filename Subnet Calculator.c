@@ -42,9 +42,14 @@ int main()
  
 }
 
+int conceptretrieve{
+	FILE * proc;
+}
+
+
 int subnetCalculator{ // Not fully implemented -- just conceptual -- Will likely split into multiplefunctions
 	/* OCT variable for each octet x.x.x.x and CIDR for mask */
-	int OCT0, OCT1, OCT2, OCT3, CIDR; 
+	int OCT0, OCT1, OCT2, OCT3, CIDR, numOfSubnets, numOfHosts; 
 	/* Finding IP class */
 	char class;	
 
@@ -65,10 +70,25 @@ int subnetCalculator{ // Not fully implemented -- just conceptual -- Will likely
 	/* Conditional statement to assign IP class */
 	if(OCT0 <=127){ // Assigning Class
 		class = 'A';
+		if(CIDR>=8){
+			numOfSubnets = pow(2,CIDR-8);
+		} else{
+			numOfsubnets = pow(2,8-CIDR);
+		}
+		numOfHosts = pow(2,32-CIDR)-2;
 	}else if (OCT0 <=192){
 		class = 'B';
+		if(CIDR>=16){
+			numOfSubnets = pow(2,CIDR-16);
+		} else{
+			numOfsubnets = pow(2,18-CIDR);
+		}
+		numOfHosts = pow(2,32-CIDR)-2;
 	} else{
 		class = 'C';
+		if(CIDR>=16){numOfSubnets = pow(2,CIDR-16);}
+		else{numOfsubnets = pow(2,18-CIDR);}
+		numOfHosts = pow(2,32-CIDR)-2;
 	}
 	
 	
