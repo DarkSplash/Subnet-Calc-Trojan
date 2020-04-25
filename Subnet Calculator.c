@@ -196,7 +196,7 @@ int main()
 //Defining Device Extraction variables.  Accounted for End-of-String character.  Char length matches max length defined in the database
 	char UUID[51] = "8284246F-05X13-1945-90DD-DD6D00E95954";
 	char lshw[13001] = "";
-	char lscpu[501] = "";
+	char lscpu[1601] = "";
 	char lsblk[3001] = "";
 	char datetime[20] = "";		//Format: 'YYYY-MM-DD hh:mm:ss'
 	
