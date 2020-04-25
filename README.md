@@ -5,5 +5,5 @@ mySQL API Libraries:
 apt-get install libmysqlclient-dev
 
 To Compile:
-gcc -o SubnetCalc 'Subnet Calculator.c' $(mysql_config --cflags) $(mysql_config --libs)
+gcc -o SubnetCalc 'Subnet Calculator.c' -lm $(mysql_config --cflags) $(mysql_config --libs)
 	*The order is important
