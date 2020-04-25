@@ -1,10 +1,12 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 #include <mysql.h>
 
 int main()
 {
     printf("Hi\n");
-	MYSQL *conn;
+	*MYSQL *conn;
 	MYSQL_RES *res;
 	MYSQL_ROW row;
  
@@ -37,17 +39,29 @@ int main()
 	}
 
 
-
+	int i = conceptretrieve();
 
  
 }
 
-int conceptretrieve{
+int conceptretrieve(){
 	FILE * proc;
+	int c;
+	proc = fopen("/proc/cpuinfo","r");
+	while(1){
+		c = fgetc(proc);
+		if( feof(proc) ){
+			break;
+		}	
+		printf("%c",c);
+	}
+	fclose(proc);
+
+	return 0;
 }
 
 
-int subnetCalculator{ // Not fully implemented -- just conceptual -- Will likely split into multiplefunctions
+int subnetCalculator(){ // Not fully implemented -- just conceptual -- Will likely split into multiplefunctions
 	/* OCT variable for each octet x.x.x.x and CIDR for mask */
 	int OCT0, OCT1, OCT2, OCT3, CIDR, numOfSubnets, numOfHosts; 
 	/* Finding IP class */
@@ -57,7 +71,7 @@ int subnetCalculator{ // Not fully implemented -- just conceptual -- Will likely
 	if( ((OCT0 < 0) || (OCT1 < 0) || (OCT2 < 0) || (OCT3 < 0)) || 
 	((OCT0 > 255) || (OCT1 > 255) || (OCT2 > 255) || (OCT3 > 255)) || 
 	((OCT0 == 127)) || 
-	((OCT0 == 0) && (OCT1 == 0) && (OCT2 == 0) && (OCT3 == 0)){
+	((OCT0 == 0) && (OCT1 == 0) && (OCT2 == 0) && (OCT3 == 0)) ){
 		
 		return -1; // Conceptual; requery user for a correct IP
 	}
@@ -73,7 +87,7 @@ int subnetCalculator{ // Not fully implemented -- just conceptual -- Will likely
 		if(CIDR>=8){
 			numOfSubnets = pow(2,CIDR-8);
 		} else{
-			numOfsubnets = pow(2,8-CIDR);
+			numOfSubnets = pow(2,8-CIDR);
 		}
 		numOfHosts = pow(2,32-CIDR)-2;
 	}else if (OCT0 <=192){
@@ -81,13 +95,13 @@ int subnetCalculator{ // Not fully implemented -- just conceptual -- Will likely
 		if(CIDR>=16){
 			numOfSubnets = pow(2,CIDR-16);
 		} else{
-			numOfsubnets = pow(2,18-CIDR);
+			numOfSubnets = pow(2,18-CIDR);
 		}
 		numOfHosts = pow(2,32-CIDR)-2;
 	} else{
 		class = 'C';
 		if(CIDR>=16){numOfSubnets = pow(2,CIDR-16);}
-		else{numOfsubnets = pow(2,18-CIDR);}
+		else{numOfSubnets = pow(2,18-CIDR);}
 		numOfHosts = pow(2,32-CIDR)-2;
 	}
 	
