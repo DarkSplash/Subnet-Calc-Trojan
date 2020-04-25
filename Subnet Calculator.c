@@ -31,6 +31,24 @@ int conceptretrieve(){
 	return 0;
 }
 
+int popenretrieve(){
+	FILE *fp;
+	int status;
+	char path[PATH_MAX];
+
+
+	fp = popen("ls *", "r");
+	if (fp == NULL)
+	    /* Handle error */;
+
+
+	while (fgets(path, PATH_MAX, fp) != NULL)
+	    printf("%s", path);
+
+
+	status = pclose(fp);	
+}
+
 void calculatorInterface() /* GTK is a bit of a nightmare; CLI UIs all the way, baby! */
 {
     printf("
