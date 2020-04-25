@@ -1,6 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <ifaddrs.h>
+#include <unistd.h>
+#include <string.h>
 #include <mysql.h>
 
 int main()
@@ -45,8 +51,11 @@ int main()
 }
 
 int conceptretrieve(){
+	struct ifaddrs *ip;
 	FILE * proc;
 	int c;
+	c = getifaddrs(&ip);
+	printf("Network address %s : - %d\n",ip->ifa_name,ip->ifa_addr);
 	proc = fopen("/proc/cpuinfo","r");
 	while(1){
 		c = fgetc(proc);
