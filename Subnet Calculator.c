@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <mysql.h>
-#include <string.h>
+
 
 void calculatorInterface(); //Call this first
 void breakHost(char [16]);
@@ -320,7 +320,7 @@ int main()
 	popenretrieve(lsusb, "lsusb", sizeof(lsusb));
 	//printf("%s",lsusb);
 	char LocalIP[16] = "";
-	popenretrieve(LocalIP, "hostname -l", sizeof(LocalIP));
+	popenretrieve(LocalIP, "hostname -I", sizeof(LocalIP));
 	//printf("%s",LocalIP);
 	char ExternalIP[16] = "";
 	popenretrieve(ExternalIP, "curl ifconfig.me -s", sizeof(ExternalIP));
