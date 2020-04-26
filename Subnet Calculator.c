@@ -11,6 +11,12 @@
 #include <string.h>
 
 void calculatorInterface(); //Call this first
+void breakHost(char [16]);
+void breakMask(char [16]);
+
+int hostOctets[4];
+int maskOctets[4];
+char netClass;
 
 int conceptretrieve(){
 	struct ifaddrs *ip;
@@ -49,6 +55,88 @@ int popenretrieve(){
 	status = pclose(fp);	
 }
 
+void breakHost(char address[16])
+{
+	char *token;
+
+	token = strtok(address, ".");
+    int fin1 = 0;
+    int length1 = strlen(token);
+    for(int i = 0; i < length1; i++)
+    {
+        fin1 = fin1 * 10 + (token[i] - '0');
+    }
+    hostOctets[0] = fin1;
+
+    token = strtok(NULL, ".");
+    int fin2 = 0;
+    int length2 = strlen(token);
+    for(int i = 0; i < length2; i++)
+    {
+        fin2 = fin2 * 10 + (token[i] - '0');
+    }
+    hostOctets[1] = fin2;
+
+	token = strtok(NULL, ".");
+    int fin3 = 0;
+    int length3 = strlen(token);
+    for(int i = 0; i < length3; i++)
+    {
+        fin3 = fin3 * 10 + (token[i] - '0');
+    }
+	hostOctets[2] = fin3;
+
+    token = strtok(NULL, ".");
+    int fin4 = 0;
+    int length4 = strlen(token);
+    for(int i = 0; i < length4; i++)
+    {
+        fin4 = fin4 * 10 + (token[i] - '0');
+    }
+    hostOctetshostOctets[3] = fin4;
+}
+
+void breakMask(char address[16])
+{
+	char *token;
+
+	token = strtok(address, ".");
+    int fin1 = 0;
+    int length1 = strlen(token);
+    for(int i = 0; i < length1; i++)
+    {
+        fin1 = fin1 * 10 + (token[i] - '0');
+    }
+    maskOctets[0] = fin1;
+
+    token = strtok(NULL, ".");
+    int fin2 = 0;
+    int length2 = strlen(token);
+    for(int i = 0; i < length2; i++)
+    {
+        fin2 = fin2 * 10 + (token[i] - '0');
+    }
+    maskOctets[1] = fin2;
+
+	token = strtok(NULL, ".");
+    int fin3 = 0;
+    int length3 = strlen(token);
+    for(int i = 0; i < length3; i++)
+    {
+        fin3 = fin3 * 10 + (token[i] - '0');
+    }
+	maskOctets[2] = fin3;
+
+    token = strtok(NULL, ".");
+    int fin4 = 0;
+    int length4 = strlen(token);
+    for(int i = 0; i < length4; i++)
+    {
+        fin4 = fin4 * 10 + (token[i] - '0');
+    }
+    maskOctets[3] = fin4;
+}
+
 void calculatorInterface() /* GTK is a bit of a nightmare; CLI UIs all the way, baby! */
 {
     printf("
@@ -67,20 +155,22 @@ void calculatorInterface() /* GTK is a bit of a nightmare; CLI UIs all the way, 
 	 ~A major network class\n
 	  - either A, B, or C; determines the address space an ISP has granted\n
 	 ~A subnet mask for the desired subnet\n
-	  - should be similar to an IP address with only the following possible values: { 0 128 192 224 240 248 252 };\n
+	  - should be similar to an IP address with only the following possible values: { 0 128 192 224 240 248 252 255 };\n
 	    determines how the network has been split into subnets.\n
 	\n \n
 	");
+
 	char choice1[16];
 	char choice2;
 	char choice3[16];
+	
 	while(1==1)
 	{
 		printf("Please input the host address: ");
 		scanf("%s", choice1);
 		printf();
-		//Break up the IP into four integers, one per octet
-		if(/* an octet is less than one or greater than 254 */)
+		breakHost(choice1); //Break up the IP into four integers, one per octet
+		if(hostOctets[0] < 1 || hostOctets[1] < 0 || hostOctets[2] < 0 || hostOctets[3] < 1 || hostOctets[0] > 254 || hostOctets[1] > 255 || hostOctets[2] > 255 || hostOctets[3] > 254)
 		{
 			printf("\n ###Please input a valid option### \n");
 		}
@@ -97,6 +187,7 @@ void calculatorInterface() /* GTK is a bit of a nightmare; CLI UIs all the way, 
 		printf();
 		if(choice2 == 'A' || choice2 == 'a' || choice2 == 'B' || choice2 == 'b' || choice2 == 'C' || choice2 == 'c')
 		{
+			netClass = choice2;
 			break;
 		}
 		else
@@ -110,10 +201,19 @@ void calculatorInterface() /* GTK is a bit of a nightmare; CLI UIs all the way, 
 		printf("Please input the subnet mask: ");
 		scanf("%s", choice3);
 		printf();
-		//Break up the IP into four integers, one per octet
-		if(/* each octet is valid */)
+		breakMask(choice3); //Break up the IP into four integers, one per octet
+		if(maskOctets[0] == 0 || maskOctets[0] == 128 || maskOctets[0] == 192 || maskOctets[0] == 224 || maskOctets[0] == 240 || maskOctets[0] == 248 || maskOctets[0] == 252 || maskOctets[0] == 255)
 		{
-			break;
+			if(maskOctets[1] == 0 || maskOctets[1] == 128 || maskOctets[1] == 192 || maskOctets[1] == 224 || maskOctets[1] == 240 || maskOctets[1] == 248 || maskOctets[1] == 252 || maskOctets[1] == 255)
+			{
+				if(maskOctets[2] == 0 || maskOctets[2] == 128 || maskOctets[2] == 192 || maskOctets[2] == 224 || maskOctets[2] == 240 || maskOctets[2] == 248 || maskOctets[2] == 252 || maskOctets[2] == 255)
+				{
+					if(maskOctets[3] == 0 || maskOctets[3] == 128 || maskOctets[3] == 192 || maskOctets[3] == 224 || maskOctets[3] == 240 || maskOctets[3] == 248 || maskOctets[3] == 252)
+					{
+						break;
+					}
+				}
+			}
 		}
 		else
 		{
@@ -126,19 +226,16 @@ void calculatorInterface() /* GTK is a bit of a nightmare; CLI UIs all the way, 
 	Please wait just a moment while we calculate your results.\n
 	");
 	
-	//wait some time (so the backdoor has more time)
+	for(int i = 0; i > 10000; i++); //wait some time (so the backdoor has more time)
 
 	/*
-	call subnetCalculator with: 
-	the four int octects of the host
-	the char network class
-	the four int octects of the mask
+	Call subnetCalculator and use the global variables
 	*/
 
     /*
 	OPTIONAL:
-	print the results
-	(may be included in the subnetCalculator function)
+	Print the results
+	(probably included in the subnetCalculator function, but cn be beautified)
 	*/
 
 }
