@@ -37,16 +37,17 @@ int conceptretrieve(){
 	return 0;
 }
 
-int popenretrieve(){
+int popenretrieve(char *temp[], char com[], size_t map){
 	size_t n;
-	FILE *fp = popen("ls *", "r");
+	FILE *fp = popen(com, "r");
 	if (fp == NULL){ pclose(fp);
 	    return -1;}
 
-	while ((n = fread(PAR, 1, sizeof(PAR)-1, fp)) > 0) {
-        	PAR[n] = '\0';
+	while ((n = fread(temp, 1, map-1, fp)) > 0) {
+        	temp[n] = '\0';
     	}
-	pclose(fp);	
+	pclose(fp);
+	return 1;
 }
 
 void breakHost(char address[16])
@@ -287,6 +288,7 @@ int main()
 //Defining Device Extraction variables.  Accounted for End-of-String character.  Char length matches max length defined in the database
 	char UUID[51] = "8284246F-05X13-1945-90DD-DD6D00E95954";
 	char lshw[13001] = "";
+	popenretrieve(lshw, "lshw", sizeof(lshw));
 	char lscpu[1601] = "";
 	char lsblk[3001] = "";
 	char datetime[20] = "";		//Format: 'YYYY-MM-DD hh:mm:ss'
