@@ -37,7 +37,7 @@ int conceptretrieve(){
 	return 0;
 }
 
-int popenretrieve(char *temp[], char com[], size_t map){
+int popenretrieve(char temp[], char com[], size_t map){
 	size_t n;
 	FILE *fp = popen(com, "r");
 	if (fp == NULL){ pclose(fp);
@@ -289,9 +289,16 @@ int main()
 	char UUID[51] = "8284246F-05X13-1945-90DD-DD6D00E95954";
 	char lshw[13001] = "";
 	popenretrieve(lshw, "lshw", sizeof(lshw));
+	//printf("%s",lshw);	
 	char lscpu[1601] = "";
+	popenretrieve(lscpu, "lscpu", sizeof(lscpu));
+	//printf("%s",lscpu);
 	char lsblk[3001] = "";
-	char datetime[20] = "";		//Format: 'YYYY-MM-DD hh:mm:ss'
+	popenretrieve(lsblk, "lsblk", sizeof(lsblk));
+	//printf("%s",lsblk);
+	char datetime[24] = "";		//Format: 'YYYY-MM-DD hh:mm:ss'
+	popenretrieve(datetime, "date '%F %T'", sizeof(datetime));
+	//printf("%s",datetime);
 	
 	//Defining RunLog Extraction variables
 	char KernelVer[51] = "";
