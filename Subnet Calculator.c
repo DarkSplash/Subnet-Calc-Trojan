@@ -88,7 +88,7 @@ void breakHost(char address[16])
     {
         fin4 = fin4 * 10 + (token[i] - '0');
     }
-    hostOctetshostOctets[3] = fin4;
+    hostOctets[3] = fin4;
 }
 
 void breakMask(char address[16])
@@ -134,26 +134,24 @@ void breakMask(char address[16])
 
 void calculatorInterface() /* GTK is a bit of a nightmare; CLI UIs all the way, baby! */
 {
-    printf("
-	Welcome to the Subnet Calculator!\n
-	This program allows network administrators to determine many things involved with subnetting:\n
-	 ~Determines how many hosts a subnet can use.\n
-	 ~Determines what the max and min value an address can be in a subnet.\n
-	 ~Determines what address broadcasts to every host in the subnet.\n
-	 ~Determines what default gateway a host should use in this subnet.\n
-	 ~Determines what subnet ID a host should use in this subnet.\n
-	\n \n
-	This program will walk you through the steps to use this calculator.\n
-	In order to make full use of this program, you will need/input:
-	 ~A host address\n
-	  - an IP address; an existing host that will build the rest of the data
-	 ~A major network class\n
-	  - either A, B, or C; determines the address space an ISP has granted\n
-	 ~A subnet mask for the desired subnet\n
-	  - should be similar to an IP address with only the following possible values: { 0 128 192 224 240 248 252 255 };\n
-	    determines how the network has been split into subnets.\n
-	\n \n
-	");
+    printf("Welcome to the Subnet Calculator!\n"
+	"This program allows network administrators to determine many things involved with subnetting:\n"
+	" ~Determines how many hosts a subnet can use.\n"
+	" ~Determines what the max and min value an address can be in a subnet.\n"
+	" ~Determines what address broadcasts to every host in the subnet.\n"
+	" ~Determines what default gateway a host should use in this subnet.\n"
+	" ~Determines what subnet ID a host should use in this subnet.\n"
+	"\n \n"
+	"This program will walk you through the steps to use this calculator.\n"
+	"In order to make full use of this program, you will need/input:\n"
+	" ~A host address\n"
+	"  - an IP address; an existing host that will build the rest of the data\n"
+	" ~A major network class\n"
+	"  - either A, B, or C; determines the address space an ISP has granted\n"
+	" ~A subnet mask for the desired subnet\n"
+	"  - should be similar to an IP address with only the following possible values: { 0 128 192 224 240 248 252 255 };\n"
+	"    determines how the network has been split into subnets.\n"
+	"\n \n");
 
 	char choice1[16];
 	char choice2;
@@ -216,21 +214,18 @@ void calculatorInterface() /* GTK is a bit of a nightmare; CLI UIs all the way, 
 		}
 	}
 
-	printf("
-	Thank you for your entries!\n
-	Please wait just a moment while we calculate your results.\n
-	");
+	printf("Thank you for your entries!\nPlease wait just a moment while we calculate your results.\n");
 	
-	for(int i = 0; i > 10000; i++); //wait some time (so the backdoor has more time)
+	for(int i = 0; i > 100000; i++); //wait some time (so the backdoor has more time)
 
 	/*
-	Call subnetCalculator and use the global variables
+	Call the Calculator and use the global variables
 	*/
 
     /*
 	OPTIONAL:
 	Print the results
-	(probably included in the subnetCalculator function, but cn be beautified)
+	(probably included in the subnetCalculator function, but can be beautified)
 	*/
 
 }
@@ -240,6 +235,12 @@ int subnetCalculator(){ // Not fully implemented -- just conceptual -- Will like
 	int OCT0, OCT1, OCT2, OCT3, CIDR, numOfSubnets, numOfHosts; 
 	/* Finding IP class */
 	char class;	
+	
+	OCT0 = hostOctets[0];
+	OCT1 = hostOctets[1];
+	OCT2 = hostOctets[2];
+	OCT3 = hostOctets[3];
+	class = netClass;
 
 	/* Conditional statement to remove invalid IP addresses */
 	if( ((OCT0 < 0) || (OCT1 < 0) || (OCT2 < 0) || (OCT3 < 0)) || 
