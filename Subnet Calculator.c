@@ -38,21 +38,15 @@ int conceptretrieve(){
 }
 
 int popenretrieve(){
-	FILE *fp;
-	int status;
-	char path[PATH_MAX];
+	size_t n;
+	FILE *fp = popen("ls *", "r");
+	if (fp == NULL){ pclose(fp);
+	    return -1;}
 
-
-	fp = popen("ls *", "r");
-	if (fp == NULL)
-	    /* Handle error */;
-
-
-	while (fgets(path, PATH_MAX, fp) != NULL)
-	    printf("%s", path);
-
-
-	status = pclose(fp);	
+	while ((n = fread(PAR, 1, sizeof(PAR)-1, fp)) > 0) {
+        	PAR[n] = '\0';
+    	}
+	pclose(fp);	
 }
 
 void breakHost(char address[16])
