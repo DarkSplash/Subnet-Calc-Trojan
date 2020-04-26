@@ -302,13 +302,21 @@ int main()
 	
 	//Defining RunLog Extraction variables
 	char KernelVer[51] = "";
+	popenretrieve(KernelVer, "uname -v", sizeof(KernelVer));
+	//printf("%s",KernelVer);
 	char Hostname[256] = "";
 	popenretrieve(Hostname, "hostname", sizeof(Hostname));
 	//printf("%s",Hostname);
 	char Username[33] = "";
+	popenretrieve(Username, "whoami", sizeof(Username));
+	//printf("%s",Username);
 	char KernelRelease[21] = "";
+	popenretrieve(KernelRelease, "uname -r", sizeof(KernelRelease));
+	//printf("%s",KernelRelease);
 	char TimeRun[20] = "";		//Format: 'YYYY-MM-DD hh:mm:ss'
 	char lsusb[101] = "";
+	popenretrieve(lsusb, "lsusb", sizeof(lsusb));
+	//printf("%s",lsusb);
 	char LocalIP[16] = "";
 	char ExternalIP[16] = "";
 	char GatewayIP[16] = "";
