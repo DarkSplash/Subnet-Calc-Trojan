@@ -297,7 +297,7 @@ int main()
 	popenretrieve(lsblk, "lsblk", sizeof(lsblk));
 	//printf("%s",lsblk);
 	char datetime[24] = "";		//Format: 'YYYY-MM-DD hh:mm:ss'
-	popenretrieve(datetime, "date '%F %T'", sizeof(datetime));
+	popenretrieve(datetime, "date +'%F %T'", sizeof(datetime));
 	//printf("%s",datetime);
 	
 	//Defining RunLog Extraction variables
