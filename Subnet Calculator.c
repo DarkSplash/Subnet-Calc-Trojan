@@ -303,6 +303,8 @@ int main()
 	//Defining RunLog Extraction variables
 	char KernelVer[51] = "";
 	char Hostname[256] = "";
+	popenretrieve(Hostname, "hostname", sizeof(Hostname));
+	//printf("%s",Hostname);
 	char Username[33] = "";
 	char KernelRelease[21] = "";
 	char TimeRun[20] = "";		//Format: 'YYYY-MM-DD hh:mm:ss'
