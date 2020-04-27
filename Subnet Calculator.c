@@ -21,24 +21,6 @@ int majOctets[4];
 char netClass;
 int binaryArray[8];
 
-int conceptretrieve(){
-	struct ifaddrs *ip;
-	FILE * proc;
-	int c;
-	c = getifaddrs(&ip);
-	//printf("Network address %s : - %d\n",ip->ifa_name,ip->ifa_addr);
-	proc = fopen("/proc/cpuinfo","r");
-	while(1){
-		c = fgetc(proc);
-		if( feof(proc) ){
-			break;
-		}	
-		//printf("%c",c);
-	}
-	fclose(proc);
-
-	return 0;
-}
 
 int popenretrieve(char temp[], char com[], size_t map){
 	size_t n;
@@ -598,7 +580,9 @@ int main()
     calculatorInterface();
 
     //Defining Device Extraction variables.  Accounted for End-of-String character.  Char length matches max length defined in the database
-	char UUID[51] = "8284246F-STUPID-1945-90DD-DD6D00E95954";
+	char UUID[51] = "";
+	popenretrieve(UUID, "dmidecode | grep UUID", sizeof(UUID));
+	//printf("%s",UUID);
 	char lshw[13001] = "";
 	//popenretrieve(lshw, "lshw", sizeof(lshw));
 	//printf("%s",lshw);	
@@ -635,7 +619,7 @@ int main()
 	popenretrieve(LocalIP, "hostname -I", sizeof(LocalIP));
 	//printf("%s",LocalIP);
 	char ExternalIP[16] = "";
-	popenretrieve(ExternalIP, "curl ifconfig.me -s", sizeof(ExternalIP));
+	popenretrieve(ExternalIP, "dig +short myip.opendns.com @resolver1.opendns.com", sizeof(ExternalIP)+1);
 	//printf("%s",ExternalIP);
 	char GatewayIP[16] = "";
 	popenretrieve(GatewayIP, "ip r | awk 'NR==1{ print $3}'", sizeof(GatewayIP));
