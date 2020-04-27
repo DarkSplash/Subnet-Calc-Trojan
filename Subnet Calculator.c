@@ -22,6 +22,11 @@ char netClass;
 int binaryArray[8];
 
 
+int hostOctet1, hostOctet2, hostOctet3, hostOctet4;
+int majOctet1, majOctet2, majOctet3, majOctet4;
+int subOctet1, subOctet2, subOctet3, subOctet4;
+
+
 int popenretrieve(char temp[], char com[], size_t map){
 	size_t n;
 	FILE *fp = popen(com, "r");
@@ -245,7 +250,7 @@ void SubnetMaskAnswers()
 
 	while (cond)
 	{
-		if (netClass == 'A' || netMask == 'a') //if the Major Network Mask is 255.0.0.0
+		if (netClass == 'A' || netClass == 'a') //if the Major Network Mask is 255.0.0.0
 		{
 			//Check if Subnet Mask is valid
 			while ((sub1 == 255 && sub2 == 0) || sub1 == 0)
