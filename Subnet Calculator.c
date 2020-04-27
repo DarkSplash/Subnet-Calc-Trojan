@@ -134,7 +134,7 @@ void breakMask(char address[16])
 
 void calculatorInterface() /* GTK is a bit of a nightmare; CLI UIs all the way, baby! */
 {
-    printf("Welcome to the Subnet Calculator!\n"
+    printf("\n\nWelcome to the Subnet Calculator!\n"
 	"This program allows network administrators to determine many things involved with subnetting:\n"
 	" ~Determines how many hosts a subnet can use.\n"
 	" ~Determines what the max and min value an address can be in a subnet.\n"
@@ -154,7 +154,7 @@ void calculatorInterface() /* GTK is a bit of a nightmare; CLI UIs all the way, 
 	"\n \n");
 
 	char choice1[16];
-	char choice2;
+	char choice2[2];
 	char choice3[16];
 	
 	while(1==1)
@@ -175,10 +175,10 @@ void calculatorInterface() /* GTK is a bit of a nightmare; CLI UIs all the way, 
 	while(1==1)
 	{
 		printf("Please input the network class: ");
-		scanf("%c", choice2);
-		if(choice2 == 'A' || choice2 == 'a' || choice2 == 'B' || choice2 == 'b' || choice2 == 'C' || choice2 == 'c')
+		scanf("%s", choice2);
+		if(choice2[0] == 'A' || choice2[0] == 'a' || choice2[0] == 'B' || choice2[0] == 'b' || choice2[0] == 'C' || choice2[0] == 'c')
 		{
-			netClass = choice2;
+			netClass = choice2[0];
 			break;
 		}
 		else
