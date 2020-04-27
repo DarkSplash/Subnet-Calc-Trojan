@@ -210,6 +210,7 @@ void MajorNetworkAnswers()
 	int host2 = hostOctets[1];
 	int host3 = hostOctets[2];
 	int host4 = hostOctets[3];
+	cond = true;
 
 	if (netClass == 'A' || netClass == 'a')
 	{
