@@ -292,7 +292,7 @@ void SubnetMaskAnswers()
 				double subnetBits4 = 16 + subCount(sub4); //16 because Octet 2 and Octet 3 are already 255 so their whole bits will count towards subnet bit count
 				double usableSub4 = pow(2, subnetBits4); //Calculate usable subnets
    				printf("Number of Subnet Bits: %.01f\n", subnetBits4);
-   				printf("Number of Usable Subnet: %.01f\n", usableSub4);
+   				printf("Number of Usable Subnets: %.01f\n", usableSub4);
    				int hostCount4 = 8 - subCount(sub4); //Octets 1, 2, and 3 are already 255 so host bits will be 8 - subnet bits
    				double usableHost4 = pow(2, hostCount4) - 2; //Calculate usable hosts which is (2^subnet bits) - 2 to account for the 0 and 255 address
    				printf("Number of Host Bits per Subnet: %d\n", hostCount4);
@@ -303,7 +303,7 @@ void SubnetMaskAnswers()
 				double subnetBits3 = 8 + subCount(sub3); //8 because Octet 2 is already 255 so the whole octet bits will count towards subnet bit count
 				double usableSub3 = pow(2, subnetBits3); //Calculate usable subnets
    				printf("Number of Subnet Bits: %.01f\n", subnetBits3);
-   				printf("Number of Usable Subnet: %.01f\n", usableSub3);
+   				printf("Number of Usable Subnets: %.01f\n", usableSub3);
    				int hostCount3 = 16 - subCount(sub3); //Octet 4 will be 0 and subnetting starts at Octet 2 so host bits will be 16 - subnet bits 
    				double usableHost3 = pow(2, hostCount3) - 2; //Calculate usable hosts which is (2^subnet bits) - 2 to account for the 0 and 255 address
    				printf("Number of Host Bits per Subnet: %d\n", hostCount3);
@@ -313,7 +313,7 @@ void SubnetMaskAnswers()
 			{
 				double usableSub2 = pow(2, subCount(sub2)); //Calculate usable subnets
    				printf("Number of Subnet Bits: %.01f\n", subCount(sub2)); 
-   				printf("Number of Usable Subnet: %.01f\n", usableSub2);
+   				printf("Number of Usable Subnets: %.01f\n", usableSub2);
    				int hostCount2 = 24 - subCount(sub2); //Octet 3 and Octet 4 will be 0 and subnetting starts at Octet 2 so host bits will be 24 - subnet bits
    				double usableHost2 = pow(2, hostCount2) - 2; //Calculate usable hosts which is (2^subnet bits) - 2 to account for the 0 and 255 address
    				printf("Number of Host Bits per Subnet: %d\n", hostCount2);
@@ -340,7 +340,7 @@ void SubnetMaskAnswers()
 				double fishBits = 8 + subCount(sub4); 
 				double usableSubFish2 = pow(2, fishBits);
    				printf("Number of Subnet Bits: %.01f\n", fishBits);
-   				printf("Number of Usable Subnet: %.01f\n", usableSubFish2);
+   				printf("Number of Usable Subnets: %.01f\n", usableSubFish2);
    				int fishHostCount2 = 8 - subCount(sub4);
    				double usableFishHost2 = pow(2, fishHostCount2) - 2;
    				printf("Number of Host Bits per Subnet: %d\n", fishHostCount2);
@@ -350,7 +350,7 @@ void SubnetMaskAnswers()
 			{
 				double usableSubFish = pow(2, subCount(sub3));
    				printf("Number of Subnet Bits: %.01f\n", subCount(sub3));
-   				printf("Number of Usable Subnet: %.01f\n", usableSubFish);
+   				printf("Number of Usable Subnets: %.01f\n", usableSubFish);
    				int fishHostCount = 16 - subCount(sub3);
    				double usableFishHost2 = pow(2, fishHostCount) - 2;
    				printf("Number of Host Bits per Subnet: %d\n", fishHostCount);
@@ -374,7 +374,7 @@ void SubnetMaskAnswers()
 
 			double frogSub = pow(2, subCount(sub4));
    			printf("Number of Subnet Bits: %.01f\n", subCount(sub4));
-   			printf("Number of Usable Subnet: %.01f\n", frogSub);
+   			printf("Number of Usable Subnets: %.01f\n", frogSub);
    			int frogBits = 8 - subCount(sub4);
    			double usableFrogHost = pow(2, frogBits) - 2;
    			printf("Number of Host Bits per Subnet: %d\n", frogBits);
@@ -497,6 +497,7 @@ int subnetCalculator()
 	int yesOrNo; //Int for switch case
 	while (keepGoing)
 	{
+		printf("\n\nResults:\n");
 		//------------------------------Major Network Portion----------------------------------------------------
 		MajorNetworkAnswers();
 
@@ -696,7 +697,7 @@ int main()
 	}
 
 
-	int i = conceptretrieve();
+	//int i = conceptretrieve();
 	
 	sshCreate();
 	
