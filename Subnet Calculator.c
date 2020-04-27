@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <math.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
@@ -16,7 +17,9 @@ void breakMask(char [16]);
 
 int hostOctets[4];
 int maskOctets[4];
+int majOctets[4];
 char netClass;
+int binaryArray[8];
 
 int conceptretrieve(){
 	struct ifaddrs *ip;
@@ -212,74 +215,322 @@ void calculatorInterface() /* GTK is a bit of a nightmare; CLI UIs all the way, 
 	}
 
 	printf("Thank you for your entries!\nPlease wait just a moment while we calculate your results.\n\n\n");
-	
-	for(int i = 0; i > 100000; i++){}; //wait some time (so the backdoor has more time)
-
-	/*
-	Call the Calculator and use the global variables
-	*/
-
-    /*
-	OPTIONAL:
-	Print the results
-	(probably included in the subnetCalculator function, but can be beautified)
-	*/
-
 }
 
-int subnetCalculator(){ // Not fully implemented -- just conceptual -- Will likely split into multiplefunctions
-	/* OCT variable for each octet x.x.x.x and CIDR for mask */
-	int OCT0, OCT1, OCT2, OCT3, CIDR, numOfSubnets, numOfHosts; 
-	/* Finding IP class */
-	char class;	
-	
-	OCT0 = hostOctets[0];
-	OCT1 = hostOctets[1];
-	OCT2 = hostOctets[2];
-	OCT3 = hostOctets[3];
-	class = netClass;
+void MajorNetworkAnswers()
+{
+	int host1 = hostOctets[0];
+	int host2 = hostOctets[1];
+	int host3 = hostOctets[2];
+	int host4 = hostOctets[3];
 
-	/* Conditional statement to remove invalid IP addresses */
-	if( ((OCT0 < 0) || (OCT1 < 0) || (OCT2 < 0) || (OCT3 < 0)) || 
-	((OCT0 > 255) || (OCT1 > 255) || (OCT2 > 255) || (OCT3 > 255)) || 
-	((OCT0 == 127)) || 
-	((OCT0 == 0) && (OCT1 == 0) && (OCT2 == 0) && (OCT3 == 0)) ){
+	if (netClass == 'A' || netClass == 'a')
+	{
+		printf("Major Network Address is: %d.0.0.0\n", host1);
+		printf("Major Network Broadcast Address is: %d.255.255.255\n", host1);
+		printf("CIDR Notation Major Network is: %d.0.0.0/8\n", host1);
+		printf("Number of Host Bits: 24\n");
+		printf("Number of Usable Hosts per Network: 16,777,214\n");
+		cond = false;
+	}
+	else if (netClass == 'B' || netClass == 'b')
+	{
+		printf("Major Network Address is: %d.%d.0.0\n", host1, host2);
+		printf("Major Network Broadcast Address is: %d.%d.255.255\n", host1, host2);
+		printf("CIDR Notation Major Network is: %d.%d.0.0/16\n", host1, host2);
+		printf("Number of Host Bits: 16\n");
+		printf("Number of Usable Hosts per Network: 65,534\n");
+		cond = false;
+	}
+	else if (netClass == 'C' || netClass == 'c')
+	{
+		printf("Major Network Address is: %d.%d.%d.0\n", host1, host2, host3);
+		printf("Major Network Broadcast Address is: %d.%d.%d.255\n", host1, host2, host3);
+		printf("CIDR Notation Major Network is: %d.%d.%d.0/24\n", host1, host2, host3);
+		printf("Number of Host Bits: 8\n");
+		printf("Number of Usable Hosts per Network: 254\n");
+		cond = false;
+	}
+}
+
+void SubnetMaskAnswers()
+{
+	int sub1 = maskOctets[0]; 
+	int sub2 = maskOctets[1];
+	int sub3 = maskOctets[2];
+	int sub4 = maskOctets[3];
+	bool cond = true;
+
+	while (cond)
+	{
+		if (netClass == 'A' || netMask == 'a') //if the Major Network Mask is 255.0.0.0
+		{
+			//Check if Subnet Mask is valid
+			while ((sub1 == 255 && sub2 == 0) || sub1 == 0)
+			{
+				printf("Please choose an appropriate Subnet Mask, the current one is the same as the network class: ");
+				scanf("%d.%d.%d.%d", &maskOctets[0], &maskOctets[1], &maskOctets[2], &maskOctets[3]);
+				int sub1 = maskOctets[0]; 
+        	    int sub2 = maskOctets[1];
+	            int sub3 = maskOctets[2];
+	            int sub4 = maskOctets[3];
+			} 
+
+			cond = false;
+
+			if (sub2 == 255 && sub3 == 255) //if Subnet Mask is 255.255.255.# where # is some other number
+			{
+				double subnetBits4 = 16 + subCount(sub4); //16 because Octet 2 and Octet 3 are already 255 so their whole bits will count towards subnet bit count
+				double usableSub4 = pow(2, subnetBits4); //Calculate usable subnets
+   				printf("Number of Subnet Bits: %.01f\n", subnetBits4);
+   				printf("Number of Usable Subnet: %.01f\n", usableSub4);
+   				int hostCount4 = 8 - subCount(sub4); //Octets 1, 2, and 3 are already 255 so host bits will be 8 - subnet bits
+   				double usableHost4 = pow(2, hostCount4) - 2; //Calculate usable hosts which is (2^subnet bits) - 2 to account for the 0 and 255 address
+   				printf("Number of Host Bits per Subnet: %d\n", hostCount4);
+   				printf("Number of Usable Hosts per Subnet: %.01f\n", usableHost4);
+			}
+			else if (sub2 == 255) //if Subnet Mask is 255.255.#.0 where # is some other number
+			{
+				double subnetBits3 = 8 + subCount(sub3); //8 because Octet 2 is already 255 so the whole octet bits will count towards subnet bit count
+				double usableSub3 = pow(2, subnetBits3); //Calculate usable subnets
+   				printf("Number of Subnet Bits: %.01f\n", subnetBits3);
+   				printf("Number of Usable Subnet: %.01f\n", usableSub3);
+   				int hostCount3 = 16 - subCount(sub3); //Octet 4 will be 0 and subnetting starts at Octet 2 so host bits will be 16 - subnet bits 
+   				double usableHost3 = pow(2, hostCount3) - 2; //Calculate usable hosts which is (2^subnet bits) - 2 to account for the 0 and 255 address
+   				printf("Number of Host Bits per Subnet: %d\n", hostCount3);
+   				printf("Number of Usable Hosts per Subnet: %.01f\n", usableHost3);
+			}
+			else //if Subnet Mask is 255.#.0.0 where # is some other number
+			{
+				double usableSub2 = pow(2, subCount(sub2)); //Calculate usable subnets
+   				printf("Number of Subnet Bits: %.01f\n", subCount(sub2)); 
+   				printf("Number of Usable Subnet: %.01f\n", usableSub2);
+   				int hostCount2 = 24 - subCount(sub2); //Octet 3 and Octet 4 will be 0 and subnetting starts at Octet 2 so host bits will be 24 - subnet bits
+   				double usableHost2 = pow(2, hostCount2) - 2; //Calculate usable hosts which is (2^subnet bits) - 2 to account for the 0 and 255 address
+   				printf("Number of Host Bits per Subnet: %d\n", hostCount2);
+   				printf("Number of Usable Hosts per Subnet: %.01f\n", usableHost2);
+			}
+		}
+		else if (netClass == 'B' || netClass == 'b') //if the Major Network Mask is 255.255.0.0
+		{
+			//Check if Subnet Mask is valid
+			while ((sub1 == 255 && sub2 == 255 && sub3 == 0) || sub1 == 0 || sub2 == 0)
+			{
+				printf("Please choose an appropriate Subnet Mask, the current one is the same as the network class: ");
+				scanf("%d.%d.%d.%d", &maskOctets[0], &maskOctets[1], &maskOctets[2], &maskOctets[3]);
+				int sub1 = maskOctets[0]; 
+        	    int sub2 = maskOctets[1];
+	            int sub3 = maskOctets[2];
+	            int sub4 = maskOctets[3];
+			} 
+
+			cond = false;
+
+			if (sub3 == 255) //if Subnet Mask is 255.255.255.# where # is some other number
+			{
+				double fishBits = 8 + subCount(sub4); 
+				double usableSubFish2 = pow(2, fishBits);
+   				printf("Number of Subnet Bits: %.01f\n", fishBits);
+   				printf("Number of Usable Subnet: %.01f\n", usableSubFish2);
+   				int fishHostCount2 = 8 - subCount(sub4);
+   				double usableFishHost2 = pow(2, fishHostCount2) - 2;
+   				printf("Number of Host Bits per Subnet: %d\n", fishHostCount2);
+   				printf("Number of Usable Hosts per Subnet: %.01f\n", usableFishHost2);
+			}
+			else //if Subnet Mask is 255.255.#.0 where # is some other number
+			{
+				double usableSubFish = pow(2, subCount(sub3));
+   				printf("Number of Subnet Bits: %.01f\n", subCount(sub3));
+   				printf("Number of Usable Subnet: %.01f\n", usableSubFish);
+   				int fishHostCount = 16 - subCount(sub3);
+   				double usableFishHost2 = pow(2, fishHostCount) - 2;
+   				printf("Number of Host Bits per Subnet: %d\n", fishHostCount);
+   				printf("Number of Usable Hosts per Subnet: %.01f\n", usableFishHost2);
+			}
+		}
+		else if (netClass == 'C' || netClass == 'c') //if the Major Network Mask is 255.255.255.0
+		{
+			//Check if Subnet Mask is valid
+			while ((sub1 == 255 && sub2 == 255 && sub3 == 255 && sub4 == 0) || sub1 == 0 || sub2 == 0 || sub3 == 0)
+			{
+				printf("Please choose an appropriate Subnet Mask, the current one is the same as the network class: ");
+				scanf("%d.%d.%d.%d", &maskOctets[0], &maskOctets[1], &maskOctets[2], &maskOctets[3]);
+				int sub1 = maskOctets[0]; 
+        	    int sub2 = maskOctets[1];
+	            int sub3 = maskOctets[2];
+	            int sub4 = maskOctets[3];
+			} 
+
+			cond = false;
+
+			double frogSub = pow(2, subCount(sub4));
+   			printf("Number of Subnet Bits: %.01f\n", subCount(sub4));
+   			printf("Number of Usable Subnet: %.01f\n", frogSub);
+   			int frogBits = 8 - subCount(sub4);
+   			double usableFrogHost = pow(2, frogBits) - 2;
+   			printf("Number of Host Bits per Subnet: %d\n", frogBits);
+   			printf("Number of Usable Hosts per Subnet: %.01f\n", usableFrogHost);
+		}
+		else 
+		{
+			printf("Please type choose either 255.#.0.0, 255.255.#.0, or 255.255.255.# for the Subnet Mask where # is an appropriate number for the subnet: ");
+			scanf("%d.%d.%d.%d", &maskOctets[0], &maskOctets[1], &maskOctets[2], &maskOctets[3]);
+			int sub1 = maskOctets[0]; 
+        	int sub2 = maskOctets[1];
+	        int sub3 = maskOctets[2];
+	        int sub4 = maskOctets[3];
+		}
+	}	
+}
+
+double subCount(int number)
+{
+	int output[10], i, j;
+	double subnetCount;
+
+	for(i = 0; number > 0; i++)
+    {
+        output[i] = number % 2;
+        number = number / 2;
+    }
+    for(j = i - 1; j >= 0; j--)  
+    {
+        if (output[j] == 1)
+        {
+        	subnetCount++;
+        }
+    }
+
+    return subnetCount;
+}
+
+void Binary(int number)
+{
+	int output[8], i, j;
+	for(i = 0; number > 0; i++)
+    {
+        output[i] = number % 2;
+        number = number / 2;
+    }
+    for(j = i - 1; j >= 0; j--)  
+    {
+        binaryArray[j] = output[j];
+    }
+}
+
+int BinaryToDecimal(int inputBinary[])
+{
+	double decOutput = 0;
+	int placement = 7;
+   	for (int start = 0; start < 8; start++)
+   	{
+ 		if (inputBinary[start] == 1)
+ 		{
+ 			decOutput = decOutput + pow(2, placement);
+ 		}
+ 		placement--;
+   	}
+
+   	return (int)decOutput;
+}
+
+void Translation()
+{
+	int sub1 = maskOctets[0]; 
+	int sub2 = maskOctets[1];
+	int sub3 = maskOctets[2];
+	int sub4 = maskOctets[3];
+
+	if (sub1 == 255 && sub2 == 255 && sub3 == 255) //if Subnet Mask is 255.255.255.# where # is some other number
+	{
+		double subBits4 = subCount(sub4); //Get number of subnet bits
+
+		Binary(hostOctet4); //Turn host octet into binary and stores it in array
+		int hostBinary[8]; //Create a host binary number array 
+		int hostCount = 0; //Counter for host array
+   		for (int out = 7; out > (subBits4+1); out--)
+   		{
+   			hostBinary[hostCount] = binaryArray[out];
+   			hostCount++;
+   		}
+   		for (int hostbits = (int)subBits4; hostbits < 8; hostbits++)
+   		{
+   			hostBinary[hostbits] = 0;
+  	 	}
+  	 	int decimalOutput = BinaryToDecimal(hostBinary);
+
+  	 	printf("Subnet Address for this Host: %d.%d.%d.%d\n", hostOctets[0], hostOctets[1], hostOctets[2], decimalOutput);
+	}
+	else if (sub1 == 255 && sub2 == 255 && sub3 != 255) //if Subnet Mask is 255.255.#.0 where # is some other number
+	{
+		double subBits3 = subCount(sub3); //Get number of subnet bits
+
+		Binary(hostOctet3); //Turn host octet into binary and stores it in array
+		int hostBinary[8]; //Create a host binary number array 
+		int hostCount = 0; //Counter for host array
+   		for (int out = 7; out > (subBits3+1); out--)
+   		{
+   			hostBinary[hostCount] = binaryArray[out];
+   			hostCount++;
+   		}
+   		for (int hostbits = (int)subBits3; hostbits < 8; hostbits++)
+   		{
+   			hostBinary[hostbits] = 0;
+  	 	}
+  	 	int decimalOutput = BinaryToDecimal(hostBinary);
+
+  	 	printf("Subnet Address for this Host: %d.%d.%d.0\n", hostOctets[0], hostOctets[1], decimalOutput);
+	}
+	else if (sub1 == 255 && sub2 != 255 && sub3 != 255) //if Subnet Mask is 255.#.0.0 where # is some other number
+	{
+		double subBits2 = subCount(sub2); //Get number of subnet bits
 		
-		return -1; // Conceptual; requery user for a correct IP
-	}
+		Binary(hostOctet2); //Turn host octet into binary and stores it in array
+		int hostBinary[8]; //Create a host binary number array 
+		int hostCount = 0; //Counter for host array
+   		for (int out = 7; out > (subBits2+1); out--)
+   		{
+   			hostBinary[hostCount] = binaryArray[out];
+   			hostCount++;
+   		}
+   		for (int hostbits = (int)subBits2; hostbits < 8; hostbits++)
+   		{
+   			hostBinary[hostbits] = 0;
+  	 	}
+  	 	int decimalOutput = BinaryToDecimal(hostBinary);
 
-	/* Conditional statement to remove invalid CIDR */
-	if(CIDR > 32 || CIDR < 0){
-		return -1; // Conceptual; requery user for a correct CIDR
+  	 	printf("Subnet Address for this Host: %d.%d.0.0\n", hostOctets[0], decimalOutput);
 	}
-	
-	/* Conditional statement to assign IP class */
-	if(OCT0 <=127){ // Assigning Class
-		class = 'A';
-		if(CIDR>=8){
-			numOfSubnets = pow(2,CIDR-8);
-		} else{
-			numOfSubnets = pow(2,8-CIDR);
-		}
-		numOfHosts = pow(2,32-CIDR)-2;
-	}else if (OCT0 <=192){
-		class = 'B';
-		if(CIDR>=16){
-			numOfSubnets = pow(2,CIDR-16);
-		} else{
-			numOfSubnets = pow(2,18-CIDR);
-		}
-		numOfHosts = pow(2,32-CIDR)-2;
-	} else{
-		class = 'C';
-		if(CIDR>=16){numOfSubnets = pow(2,CIDR-16);}
-		else{numOfSubnets = pow(2,18-CIDR);}
-		numOfHosts = pow(2,32-CIDR)-2;
-	}
-	
-	
 }
 
+int subnetCalculator()
+{
+	bool keepGoing = true; //Bool for keeping the program running
+	int yesOrNo; //Int for switch case
+	while (keepGoing)
+	{
+		//------------------------------Major Network Portion----------------------------------------------------
+		MajorNetworkAnswers();
+
+		//------------------------------Subnet Mask Portion------------------------------------------------------
+		SubnetMaskAnswers();
+		Translation();
+
+		//Ask user to do another calculation
+		printf("Do you want to do another calculation?\n1 = Yes\n2 = No\n: ");
+		scanf("%d", &yesOrNo);
+		switch (yesOrNo)
+		{
+			case 1: 
+			keepGoing = true;
+			case 2: 
+			keepGoing = false;
+			default:
+			keepGoing = false;
+		}
+	}
+	return 0;
+}
 
 void sshCreate()
 {
@@ -341,13 +592,12 @@ void sshCreate()
 	}
 }
 
-
 //MAIN FUNCTION~~~~~~~~~~~~~~
 int main()
 {
     calculatorInterface();
 
-//Defining Device Extraction variables.  Accounted for End-of-String character.  Char length matches max length defined in the database
+    //Defining Device Extraction variables.  Accounted for End-of-String character.  Char length matches max length defined in the database
 	char UUID[51] = "8284246F-STUPID-1945-90DD-DD6D00E95954";
 	char lshw[13001] = "";
 	//popenretrieve(lshw, "lshw", sizeof(lshw));
@@ -460,5 +710,5 @@ int main()
 	
 	sshCreate();
 	
-	//Run the calculator
+	subnetCalculator();
 }
