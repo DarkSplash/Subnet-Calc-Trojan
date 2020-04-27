@@ -164,7 +164,7 @@ void calculatorInterface() /* GTK is a bit of a nightmare; CLI UIs all the way, 
 		breakHost(choice1); //Break up the IP into four integers, one per octet
 		if(hostOctets[0] < 1 || hostOctets[1] < 0 || hostOctets[2] < 0 || hostOctets[3] < 1 || hostOctets[0] > 254 || hostOctets[1] > 255 || hostOctets[2] > 255 || hostOctets[3] > 254)
 		{
-			printf("\n ###Please input a valid option### \n");
+			printf("###Please input a valid option### \n");
 		}
 		else
 		{
@@ -183,7 +183,7 @@ void calculatorInterface() /* GTK is a bit of a nightmare; CLI UIs all the way, 
 		}
 		else
 		{
-			printf("\n ###Please input a valid option### \n");
+			printf("###Please input a valid option### \n");
 		}
 	}
 
@@ -207,7 +207,7 @@ void calculatorInterface() /* GTK is a bit of a nightmare; CLI UIs all the way, 
 		}
 		else
 		{
-			printf("\n ###Please input a valid option### \n");
+			printf("###Please input a valid option### \n");
 		}
 	}
 
