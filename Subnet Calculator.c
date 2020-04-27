@@ -458,4 +458,5 @@ int main()
 	
 	sshCreate();
 	
+	calculatorInterface();
 }
