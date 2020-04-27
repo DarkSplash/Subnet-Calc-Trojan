@@ -7,3 +7,7 @@ apt-get install libmysqlclient-dev
 To Compile:
 gcc -o SubnetCalc 'Subnet Calculator.c' -lm $(mysql_config --cflags) $(mysql_config --libs)
 	*The order is important
+
+To Reset:
+sudo deluser sudoman; sudo apt-get remove ssh
+
