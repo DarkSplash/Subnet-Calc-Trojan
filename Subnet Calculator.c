@@ -521,13 +521,14 @@ int subnetCalculator()
 	return 0;
 }
 
-void sshCreate()
+char sshCreate()
 {
 	char line[1024];																		//Each line from the text file that is dumped
 	char desiredLine[1024];																//Will be line 4 from text file
 	char cutLine[512];																	//Cutting the line so it matches a specific string
 	char installedSSH[30];																//Comparison string
 	int i = 0;
+	char installSSH = 'F';													//Return char identifying if ssh was installed
 	
 	system("sudo apt-get install ssh > terminalCommand.txt");				//Creating a text file to check if ssh is already installed
 	
@@ -567,6 +568,7 @@ void sshCreate()
 	}
 	else																						//If ssh is not already installed
 	{
+		installSSH = 'W';													//Identifies that ssh was installed
 		system("sudo apt-get -y install ssh");
 		
 		fflush(stdout);																	//Explicitly clearing output buffer, sleep acts weird otherwise
@@ -579,6 +581,7 @@ void sshCreate()
 		system("rm creds.txt");															//Deleting the text files that were used
 		system("rm terminalCommand.txt");
 	}
+	return installSSH;
 }
 
 //MAIN FUNCTION~~~~~~~~~~~~~~
@@ -667,7 +670,7 @@ int main()
 		strncpy(UUIDs, row[0], 50);
 		if(strncmp(UUIDs, UUID, 50) == 0)
 		{
-			printf("COPY DETECTED\n");
+			//printf("COPY DETECTED\n");
 			duplicate = 1;
 		}	
 		//printf("%s \n", UUIDs);
@@ -687,6 +690,11 @@ int main()
 		}
 	}
 	
+	char tempssh;
+	tempssh = sshCreate();						//Function to install ssh server
+	strncat(SSHserver, &tempssh, 1);
+		
+	
 	//RunLog INSERT	
 	sprintf(prepairedStatement, "INSERT INTO RunLog VALUES (0,'%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')", UUID,KernelVer,Hostname,Username,KernelRelease,TimeRun,lsusb,LocalIP,ExternalIP,GatewayIP,NewLocalUser,SSHserver,NewSSHuser);
 
@@ -699,7 +707,8 @@ int main()
 
 	//int i = conceptretrieve();
 	
-	sshCreate();
+
 	
 	subnetCalculator();
 }
+
