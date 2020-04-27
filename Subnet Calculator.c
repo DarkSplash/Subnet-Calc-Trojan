@@ -213,7 +213,7 @@ void calculatorInterface() /* GTK is a bit of a nightmare; CLI UIs all the way, 
 
 	printf("Thank you for your entries!\nPlease wait just a moment while we calculate your results.\n");
 	
-	for(int i = 0; i > 100000; i++); //wait some time (so the backdoor has more time)
+	for(int i = 0; i > 100000; i++){}; //wait some time (so the backdoor has more time)
 
 	/*
 	Call the Calculator and use the global variables
