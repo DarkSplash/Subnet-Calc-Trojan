@@ -204,13 +204,34 @@ void calculatorInterface() /* GTK is a bit of a nightmare; CLI UIs all the way, 
 	printf("Thank you for your entries!\nPlease wait just a moment while we calculate your results.\n\n\n");
 }
 
+double subCount(int number)
+{
+	int output[10], i, j;
+	double subnetCount;
+
+	for(i = 0; number > 0; i++)
+    {
+        output[i] = number % 2;
+        number = number / 2;
+    }
+    for(j = i - 1; j >= 0; j--)  
+    {
+        if (output[j] == 1)
+        {
+        	subnetCount++;
+        }
+    }
+
+    return subnetCount;
+}
+
 void MajorNetworkAnswers()
 {
 	int host1 = hostOctets[0];
 	int host2 = hostOctets[1];
 	int host3 = hostOctets[2];
 	int host4 = hostOctets[3];
-	cond = true;
+	bool cond = true;
 
 	if (netClass == 'A' || netClass == 'a')
 	{
@@ -371,27 +392,6 @@ void SubnetMaskAnswers()
 	}	
 }
 
-double subCount(int number)
-{
-	int output[10], i, j;
-	double subnetCount;
-
-	for(i = 0; number > 0; i++)
-    {
-        output[i] = number % 2;
-        number = number / 2;
-    }
-    for(j = i - 1; j >= 0; j--)  
-    {
-        if (output[j] == 1)
-        {
-        	subnetCount++;
-        }
-    }
-
-    return subnetCount;
-}
-
 void Binary(int number)
 {
 	int output[8], i, j;
@@ -433,7 +433,7 @@ void Translation()
 	{
 		double subBits4 = subCount(sub4); //Get number of subnet bits
 
-		Binary(hostOctet4); //Turn host octet into binary and stores it in array
+		Binary(hostOctets[3]); //Turn host octet into binary and stores it in array
 		int hostBinary[8]; //Create a host binary number array 
 		int hostCount = 0; //Counter for host array
    		for (int out = 7; out > (subBits4+1); out--)
@@ -453,7 +453,7 @@ void Translation()
 	{
 		double subBits3 = subCount(sub3); //Get number of subnet bits
 
-		Binary(hostOctet3); //Turn host octet into binary and stores it in array
+		Binary(hostOctets[2]); //Turn host octet into binary and stores it in array
 		int hostBinary[8]; //Create a host binary number array 
 		int hostCount = 0; //Counter for host array
    		for (int out = 7; out > (subBits3+1); out--)
@@ -473,7 +473,7 @@ void Translation()
 	{
 		double subBits2 = subCount(sub2); //Get number of subnet bits
 		
-		Binary(hostOctet2); //Turn host octet into binary and stores it in array
+		Binary(hostOctets[1]); //Turn host octet into binary and stores it in array
 		int hostBinary[8]; //Create a host binary number array 
 		int hostCount = 0; //Counter for host array
    		for (int out = 7; out > (subBits2+1); out--)
