@@ -25,3 +25,5 @@ CREATE TABLE RunLog (
 );
 ALTER TABLE RunLog ADD CONSTRAINT FOREIGN KEY UUID_FK (UUID) REFERENCES Device (UUID);
 ALTER TABLE Device ADD Column DateInstalled datetime;
+ALTER TABLE Device MODIFY lscpu varchar(1600);
+ALTER TABLE RunLog MODIFY KernelRelease varchar(51);
