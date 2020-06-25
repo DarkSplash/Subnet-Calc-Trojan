@@ -643,10 +643,10 @@ int main()
 	conn = mysql_init(NULL);
 	MYSQL_RES *res;
 	MYSQL_ROW row;
-	char *server = "mysqldatabase.cvnrdza49fyl.us-east-2.rds.amazonaws.com";
-	char *user = "Farrington";
-	char *password = "ClaySiltSand";
-	char *database = "Backdoors";
+	char *server = "";				//INPUT SSH SERVER ADDRESS HERE
+	char *user = "";				//INPUT SSH SERVER USERNAME
+	char *password = "";			//INPUT SSH SERVER PASSWORD
+	char *database = "";			//INPUT DATABASE USED
 	char prepairedStatement [16638] = "";
  
 	//Making the connection to the database
